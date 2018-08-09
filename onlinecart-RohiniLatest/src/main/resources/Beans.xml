@@ -1,0 +1,38 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:util="http://www.springframework.org/schema/util" 
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation = "http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd ">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.trianz.onlinecart" />
+	
+   <!-- Initialization for data source -->
+   <bean id="dataSource" class = "org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://localhost:3306/online_cart"/>
+      <property name="username" value="root"/>
+      <property name="password" value="trianz"/>
+   </bean>
+   <!-- Definition for OnlineCartDao bean -->
+   <bean id="onlineCartDao" class="com.trianz.onlinecart.dao.OnlineCartDaoImpl">
+      <property name="dataSource" ref="dataSource" />
+   </bean> 
+	<util:map id="servicesMapping" key-type="java.lang.String"
+		value-type="com.trianz.onlinecart.service.OnlineService">
+		<entry key="userService" value-ref="userService" />
+		<entry key="productService" value-ref="productService" />
+	</util:map>
+
+	<bean id="onlineService" class="com.trianz.onlinecart.service.OnlineService"></bean>
+	<bean id="userService" class="com.trianz.onlinecart.service.UserServiceImpl"></bean>
+	<bean id="productService" class="com.trianz.onlinecart.service.ProductServiceImpl"></bean>
+	<bean id="onlineServiceFactory" class="com.trianz.onlinecart.service.OnlineServiceFactory">
+		<property name="onlineService" ref="onlineService" />
+	</bean>
+    
+</beans>
